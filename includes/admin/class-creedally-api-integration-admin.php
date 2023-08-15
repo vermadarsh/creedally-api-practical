@@ -8,7 +8,7 @@
  * @since      1.0.0
  *
  * @package    Api_Integration
- * @subpackage Api_Integration/inc/admin
+ * @subpackage Api_Integration/includes/admin
  */
 
 /**
@@ -53,7 +53,7 @@ class CreedAlly_Api_Integration_Admin {
 	 * @since 1.0.0
 	 */
 	public function cai_widgets_init_callback() {
-		require_once CAI_PLUGIN_PATH . 'inc/class-creedally-api-integration-news-widget.php';
-		register_widget( 'Api_Integration_News_Widget' );
+		require_once CAI_PLUGIN_PATH . 'includes/class-creedally-api-integration-news-widget.php';
+		register_widget( 'CreedAlly_Api_Integration_News_Widget' );
 	}
 }

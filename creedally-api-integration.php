@@ -49,10 +49,10 @@ if ( ! defined( 'CAIWC_LOG_DIR_URL' ) ) {
 
 /**
  * This code runs during the plugin activation.
- * This code is documented in inc/class-api-integration-activator.php
+ * This code is documented in includes/class-api-integration-activator.php
  */
 function cai_activate_api_integration() {
-	require 'inc/class-creedally-api-integration-activator.php';
+	require 'includes/class-creedally-api-integration-activator.php';
 	CreedAlly_Api_Integration_Activator::run();
 }
 
@@ -60,10 +60,10 @@ register_activation_hook( __FILE__, 'cai_activate_api_integration' );
 
 /**
  * This code runs during the plugin deactivation.
- * This code is documented in inc/class-api-integration-deactivator.php
+ * This code is documented in includes/class-api-integration-deactivator.php
  */
 function cai_deactivate_api_integration() {
-	require 'inc/class-creedally-api-integration-deactivator.php';
+	require 'includes/class-creedally-api-integration-deactivator.php';
 	CreedAlly_Api_Integration_Deactivator::run();
 }
 
@@ -80,7 +80,7 @@ register_deactivation_hook( __FILE__, 'cai_deactivate_api_integration' );
  */
 function run_creedally_api_integration_plugin() {
 	// The core plugin class that is used to define internationalization, admin-specific hooks, and public-facing site hooks.
-	require 'inc/class-creedally-api-integration.php';
+	require 'includes/class-creedally-api-integration.php';
 	$plugin_class_obj = new CreedAlly_Api_Integration();
 }
 
@@ -133,4 +133,21 @@ function cai_plugin_actions_callback( $links ) {
 	);
 
 	return array_merge( $this_plugin_links, $links );
+}
+
+/**
+ * Debugger function which shall be removed in production.
+ */
+if ( ! function_exists( 'debug' ) ) {
+	/**
+	 * Debug function definition.
+	 *
+	 * @since    1.0.0
+	 * @param string $params it holds the parameters of debug code.
+	 */
+	function debug( $params ) {
+		echo '<pre>';
+		print_r( $params ); // phpcs:ignore
+		echo '</pre>';
+	}
 }

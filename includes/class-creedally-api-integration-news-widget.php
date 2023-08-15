@@ -19,14 +19,14 @@ defined( 'ABSPATH' ) || exit; // Exit if accessed directly.
  * @package    Api_Integration
  * @author     Adarsh Verma <adarsh.srmcem@gmail.com>
  */
-class Api_Integration_News_Widget extends WP_Widget {
+class CreedAlly_Api_Integration_News_Widget extends WP_Widget {
 	/**
 	 * Constructor.
 	 */
 	public function __construct() {
 		parent::__construct(
-			'api-integration-news-items-widget', // Widget base ID.
-			__( 'API Integration: News Items', 'api-integration' ), // Widget name will appear in UI.
+			'creedally-api-integration-news-items-widget', // Widget base ID.
+			__( 'CreedAlly API Integration: News Items', 'api-integration' ), // Widget name will appear in UI.
 			array(
 				'description' => __( 'This widget offered by API Integration plugin, shows the popular news items.', 'api-integration' ), // Widget description.
 			)

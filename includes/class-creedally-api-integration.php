@@ -9,7 +9,7 @@
  * @since      1.0.0
  *
  * @package    CreedAlly_Api_Integration
- * @subpackage CreedAlly_Api_Integration/inc
+ * @subpackage CreedAlly_Api_Integration/includes
  */
 
 /**
@@ -20,7 +20,7 @@
  *
  * @since      1.0.0
  * @package    CreedAlly_Api_Integration
- * @subpackage CreedAlly_Api_Integration/inc
+ * @subpackage CreedAlly_Api_Integration/includes
  * @author     Adarsh Verma <adarsh.srmcem@gmail.com>
  */
 class CreedAlly_Api_Integration {
@@ -53,13 +53,13 @@ class CreedAlly_Api_Integration {
 	 */
 	private function load_dependant_files() {
 		// This function is used to write reusable functions.
-		require_once CAI_PLUGIN_PATH . 'inc/creedally-api-integration-functions.php';
+		require_once CAI_PLUGIN_PATH . 'includes/creedally-api-integration-functions.php';
 
 		// The class responsible for defining all actions that occur in the admin area.
-		require_once CAI_PLUGIN_PATH . 'inc/admin/class-creedally-api-integration-admin.php';
+		require_once CAI_PLUGIN_PATH . 'includes/admin/class-creedally-api-integration-admin.php';
 
 		// The class responsible for defining all actions that occur in the public-facing side of the site.
-		require_once CAI_PLUGIN_PATH . 'inc/public/class-creedally-api-integration-public.php';
+		require_once CAI_PLUGIN_PATH . 'includes/public/class-creedally-api-integration-public.php';
 	}
 
 	/**

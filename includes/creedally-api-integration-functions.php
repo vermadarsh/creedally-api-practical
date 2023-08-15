@@ -138,7 +138,7 @@ if ( ! function_exists( 'ai_write_api_log' ) ) {
 
 		// Log file.
 		$user_id  = get_current_user_id();
-		$log_file = AIWC_LOG_DIR_PATH . "customer_preferred_news_{$user_id}.log";
+		$log_file = CAIWC_LOG_DIR_PATH . "customer_preferred_news_{$user_id}.log";
 
 		// Check if the file is created.
 		if ( ! $wp_filesystem->exists( $log_file ) ) {
@@ -172,5 +172,87 @@ if ( ! function_exists( 'ai_get_current_datetime' ) ) {
 		$timezone_format = _x( $format, 'timezone date format' ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText -- Format is a dynamic value.
 
 		return date_i18n( $timezone_format );
+	}
+}
+
+/**
+ * Check if the function, 'cai_get_template' exists.
+ */
+if ( ! function_exists( 'cai_get_template' ) ) {
+	/**
+	 * Get other templates (e.g. product attributes) passing attributes and including the file.
+	 *
+	 * @param string $template_name Template name.
+	 * @param string $template_path Template path. (default: '').
+	 * @param string $default_path  Default path. (default: '').
+	 */
+	/**
+	 * Return the current date according to local time.
+	 *
+	 * @param string $format Holds the format string.
+	 * @return string
+	 */
+	function cai_get_template( $template_name, $template_path = '', $default_path = '' ) {
+		$template = cai_locate_template( $template_name, $template_path, $default_path );
+
+		// Allow 3rd party plugin filter template file from their plugin.
+		$filter_template = apply_filters( 'cai_get_template', $template, $template_name, $template_path, $default_path );
+
+		if ( $filter_template !== $template ) {
+			if ( ! file_exists( $filter_template ) ) {
+				/* translators: %s template */
+				wc_doing_it_wrong( __FUNCTION__, sprintf( __( '%s does not exist.', 'api-integration' ), '<code>' . $filter_template . '</code>' ), '1.0.0' );
+				return;
+			}
+
+			$template = $filter_template;
+		}
+
+		include $template;
+	}
+}
+
+/**
+ * Check if the function, 'cai_locate_template' exists.
+ */
+if ( ! function_exists( 'cai_locate_template' ) ) {
+	/**
+	 * Locate a template and return the path for inclusion.
+	 *
+	 * This is the load order:
+	 *
+	 * yourtheme/$template_path/$template_name
+	 * yourtheme/$template_name
+	 * $default_path/$template_name
+	 *
+	 * @param string $template_name Template name.
+	 * @param string $template_path Template path. (default: '').
+	 * @param string $default_path  Default path. (default: '').
+	 * @return string
+	 */
+	function cai_locate_template( $template_name, $template_path = '', $default_path = '' ) {
+		if ( ! $template_path ) {
+			$template_path = 'creedally-api-integration/';
+		}
+
+		if ( ! $default_path ) {
+			$default_path = CAI_PLUGIN_PATH . 'templates/';
+		}
+
+		// Look within passed path within the theme - this is priority.
+		$template = locate_template(
+			array(
+				trailingslashit( $template_path ) . $template_name,
+				$template_name,
+			)
+		);
+
+		// If the concerned template is not found in the theme, get the default path from the plugin.
+		if ( ! $template ) {
+			$template = $default_path . $template_name;
+		}
+
+		// Return what is found.
+		return apply_filters( 'cai_locate_template', $template, $template_name, $template_path );
 	}
 }

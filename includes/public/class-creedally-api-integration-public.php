@@ -8,7 +8,7 @@
  * @since      1.0.0
  *
  * @package    Api_Integration
- * @subpackage Api_Integration/inc/public
+ * @subpackage Api_Integration/includes/public
  */
 
 /**
@@ -29,25 +29,25 @@ class CreedAlly_Api_Integration_Public {
 		// Custom public style.
 		wp_register_style(
 			'api-integration-jquery-ui-style',
-			AI_PLUGIN_URL . 'inc/public/css/ui/jquery-ui.min.css',
+			CAI_PLUGIN_URL . 'includes/public/css/ui/jquery-ui.min.css',
 			array(),
-			filemtime( AI_PLUGIN_PATH . 'inc/public/css/ui/jquery-ui.min.css' )
+			filemtime( CAI_PLUGIN_PATH . 'includes/public/css/ui/jquery-ui.min.css' )
 		);
 
 		// Custom public style.
 		wp_enqueue_style(
 			'api-integration-public-style',
-			AI_PLUGIN_URL . 'inc/public/css/api-integration-public.css',
+			CAI_PLUGIN_URL . 'includes/public/css/api-integration-public.css',
 			array(),
-			filemtime( AI_PLUGIN_PATH . 'inc/public/css/api-integration-public.css' ),
+			filemtime( CAI_PLUGIN_PATH . 'includes/public/css/api-integration-public.css' ),
 		);
 
 		// Custom public script.
 		wp_enqueue_script(
 			'api-integration-public-script',
-			AI_PLUGIN_URL . 'inc/public/js/api-integration-public.js',
+			CAI_PLUGIN_URL . 'includes/public/js/api-integration-public.js',
 			array( 'jquery', 'jquery-ui-datepicker' ),
-			filemtime( AI_PLUGIN_PATH . 'inc/public/js/api-integration-public.js' ),
+			filemtime( CAI_PLUGIN_PATH . 'includes/public/js/api-integration-public.js' ),
 			true
 		);
 
@@ -123,7 +123,7 @@ class CreedAlly_Api_Integration_Public {
 	 */
 	public function ai_woocommerce_account_news_endpoint_callback() {
 		// Include the news listing template.
-		include_once 'templates/news.php';
+		cai_get_template( 'myaccount/news.php' );
 	}
 
 	/**

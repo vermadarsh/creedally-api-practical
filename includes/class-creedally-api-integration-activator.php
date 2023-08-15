@@ -8,7 +8,7 @@
  * @since      1.0.0
  *
  * @package    CreedAlly_Api_Integration
- * @subpackage CreedAlly_Api_Integration/inc
+ * @subpackage CreedAlly_Api_Integration/includes
  */
 
 /**
@@ -18,7 +18,7 @@
  *
  * @since      1.0.0
  * @package    CreedAlly_Api_Integration
- * @subpackage CreedAlly_Api_Integration/inc
+ * @subpackage CreedAlly_Api_Integration/includes
  * @author     CreedAlly_Api_Integration Verma <adarsh.srmcem@gmail.com>
  */
 class CreedAlly_Api_Integration_Activator {
