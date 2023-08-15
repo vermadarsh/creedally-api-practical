@@ -261,9 +261,9 @@ if ( ! function_exists( 'cai_locate_template' ) ) {
  */
 if ( ! function_exists( 'cai_get_news_row_html' ) ) {
 	/**
-	 * Return the current date according to local time.
+	 * Get the news row html.
 	 *
-	 * @param string $format Holds the format string.
+	 * @param array $news_item News data array.
 	 * @return string
 	 */
 	function cai_get_news_row_html( $news_item = array() ) {
@@ -281,6 +281,36 @@ if ( ! function_exists( 'cai_get_news_row_html' ) ) {
 			<td data-title="<?php esc_html_e( 'Description', 'api-integration' ); ?>"><?php echo wp_kses_post( ( ! empty( $news_item['description'] ) ? $news_item['description'] : '' ) ); ?></td>
 			<td data-title="<?php esc_html_e( 'Date', 'api-integration' ); ?>"><?php echo wp_kses_post( ( ! empty( $news_item['publishedAt'] ) ? gmdate( 'Y-m-d H:i', strtotime( $news_item['publishedAt'] ) ) : '' ) ); ?></td>
 		</tr>
+		<?php
+
+		return ob_get_clean();
+	}
+}
+
+/**
+ * Check if the function, 'cai_get_news_widget_section_html' exists.
+ */
+if ( ! function_exists( 'cai_get_news_widget_section_html' ) ) {
+	/**
+	 * Get the news section html.
+	 *
+	 * @param array $news_item News data array.
+	 * @return string
+	 */
+	function cai_get_news_widget_section_html( $news_item = array() ) {
+		// Return, if the news item array is blank.
+		if ( empty( $news_item ) || ! is_array( $news_item ) ) {
+			return;
+		}
+
+		// Start preparing the HTML.
+		ob_start();
+		?>
+		<div class="news-item">
+			<img alt="news-item-featured-image" src="<?php echo esc_url( ( ! empty( $news_item['urlToImage'] ) ? $news_item['urlToImage'] : '' ) ); ?>" />
+			<h4><a href="<?php echo esc_url( ( ! empty( $news_item['url'] ) ? $news_item['url'] : '' ) ); ?>" target="_blank" title="<?php echo wp_kses_post( ( ! empty( $news_item['title'] ) ? $news_item['title'] : '' ) ); ?>"><?php echo wp_kses_post( ( ! empty( $news_item['title'] ) ? $news_item['title'] : '' ) ); ?></a></h4>
+			<p><?php echo wp_kses_post( ( ! empty( $news_item['description'] ) ? wp_trim_words( $news_item['description'], 10, '...' ) : '' ) ); ?></p>
+		</div>
 		<?php
 
 		return ob_get_clean();

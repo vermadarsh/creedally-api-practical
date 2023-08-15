@@ -97,15 +97,13 @@ if ( $has_news ) :
 			endforeach;
 			?>
 		</tbody>
-		<tfoot>
-			<tr class="news-pagination">
-				<td><a href="#" class="prev non-clickable" title="<?php esc_html_e( 'Prev', 'api-integration' ); ?>"><?php esc_html_e( 'Prev', 'api-integration' ); ?></a></td>
-				<td><input type="hidden" id="current-news-items-page" value="1" /></td>
-				<td></td>
-				<td><a href="#" class="next" title="<?php esc_html_e( 'Next', 'api-integration' ); ?>"><?php esc_html_e( 'Next', 'api-integration' ); ?></a></td>
-			</tr>
-		</tfoot>
 	</table>
+	<div class="news-pagination">
+		<a href="#" class="prev non-clickable" title="<?php esc_html_e( 'Prev', 'api-integration' ); ?>"><?php esc_html_e( 'Prev', 'api-integration' ); ?></a>
+		<a href="#" class="next" title="<?php esc_html_e( 'Next', 'api-integration' ); ?>"><?php esc_html_e( 'Next', 'api-integration' ); ?></a>
+		<input type="hidden" id="current-news-items-page" value="1" />
+		<input type="hidden" id="pagination-section" value="customer-portal" />
+	</div>
 <?php else : ?>
 
 	<?php wc_print_notice( __( 'The news could not be fetched from the API.', 'api-integration' ) . ' <a class="woocommerce-Button button" href="mailto:' . get_option( 'admin_email' ) . '">' . __( 'Contact administrator', 'api-integration' ) . '</a>', 'notice' ); // phpcs:ignore WooCommerce.Commenting.CommentHooks.MissingHookComment ?>

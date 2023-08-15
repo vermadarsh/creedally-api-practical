@@ -1,7 +1,7 @@
 .non-clickable {pointer-events: none;opacity: 0.5;}
 .news-pagination .prev,
-.news-pagination .next,
-.news-widget-pagination-links .prev,
-.news-widget-pagination-links .next{outline: none;}
-.news-widget-pagination-links {text-align: center;}
-.news-widget-pagination-links .next{margin-left: 20px;}
+.news-pagination .next {outline: none;}
+.news-pagination {text-align: center;}
+.news-pagination .next{margin-left: 20px;}
+.api-integration-news-container.widget-container .news-item img {width: 50%;}
+.api-integration-news-container.widget-container .news-item h4 {font-size: 1em;font-weight: 700;}

@@ -65,8 +65,7 @@ class CreedAlly_Api_Integration_News_Widget extends WP_Widget {
 		$news_items = json_decode( $news_items, true );
 		$news_items = array_slice( $news_items, 0, $per_page );
 
-		// Display the calendar widget with reservable items.
-		ob_start();
+		// Display the news listing widget.
 		?>
 		<div class="api-integration-widget-container">
 			<?php
@@ -89,19 +88,18 @@ class CreedAlly_Api_Integration_News_Widget extends WP_Widget {
 
 			if ( ! empty( $news_items ) && is_array( $news_items ) ) {
 				?>
-				<div class="api-integration-news-container">
+				<div class="api-integration-news-container widget-container">
 					<?php foreach ( $news_items as $news_item ) {
 						$news_item = (array) $news_item;
-						?>
-						<div class="news-item">
-							<img alt="news-item-featured-image" src="<?php echo esc_url( ( ! empty( $news_item['urlToImage'] ) ? $news_item['urlToImage'] : '' ) ); ?>" />
-							<h4><a href="<?php echo esc_url( ( ! empty( $news_item['url'] ) ? $news_item['url'] : '' ) ); ?>" target="_blank" title="<?php echo wp_kses_post( ( ! empty( $news_item['title'] ) ? $news_item['title'] : '' ) ); ?>"><?php echo wp_kses_post( ( ! empty( $news_item['title'] ) ? $news_item['title'] : '' ) ); ?></a></h4>
-							<p><?php echo wp_kses_post( ( ! empty( $news_item['description'] ) ? $news_item['description'] : '' ) ); ?></p>
-						</div>
-					<?php } ?>
-					<div class="news-widget-pagination-links">
+						echo wp_kses_post( cai_get_news_widget_section_html( $news_item ) );
+						} ?>
+				</div>
+				<div class="api-integration-news-pagination">
+					<div class="news-pagination">
 						<a href="#" class="prev non-clickable" title="<?php esc_html_e( 'Prev', 'api-integration' ); ?>"><?php esc_html_e( 'Prev', 'api-integration' ); ?></a>
 						<a href="#" class="next" title="<?php esc_html_e( 'Next', 'api-integration' ); ?>"><?php esc_html_e( 'Next', 'api-integration' ); ?></a>
+						<input type="hidden" id="current-news-items-page" value="1" />
+						<input type="hidden" id="pagination-section" value="widget" />
 					</div>
 				</div>
 				<?php
@@ -118,32 +116,6 @@ class CreedAlly_Api_Integration_News_Widget extends WP_Widget {
 			?>
 		</div>
 		<?php
-		echo wp_kses(
-			ob_get_clean(),
-			array(
-				'a'   => array(
-					'title' => array(),
-					'href'  => array(),
-					'class' => array(),
-				),
-				'div' => array(
-					'class' => array(),
-				),
-				'p'   => array(
-					'class' => array(),
-				),
-				'h2'  => array(
-					'class' => array(),
-				),
-				'h4'  => array(
-					'class' => array(),
-				),
-				'img' => array(
-					'alt' => array(),
-					'src' => array(),
-				),
-			)
-		);
 	}
 
 	/**

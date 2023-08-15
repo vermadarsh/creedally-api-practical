@@ -197,6 +197,7 @@ class CreedAlly_Api_Integration_Public {
 
 		// Get the news.
 		$page        = (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_NUMBER_INT );
+		$section     = filter_input( INPUT_POST, 'section', FILTER_SANITIZE_STRING );
 		$customer_id = get_current_user_id();
 		$news_items  = get_transient( "ai_newsapi_news_{$customer_id}" ); // Fetch the news data from the cache.
 		$news_items  = ( false !== $news_items ) ? json_decode( $news_items, true ) : false;
@@ -234,7 +235,13 @@ class CreedAlly_Api_Integration_Public {
 		// Loop through the paginated news items.
 		foreach ( $news_items as $news_item ) {
 			$news_item = (array) $news_item;
-			$html     .= cai_get_news_row_html( $news_item );
+
+			// Get the html based on the section.
+			if ( 'customer-portal' === $section ) {
+				$html .= cai_get_news_row_html( $news_item );
+			} elseif ( 'widget' === $section ) {
+				$html .= cai_get_news_widget_section_html( $news_item );
+			}
 		}
 
 		// Return the ajax response.
