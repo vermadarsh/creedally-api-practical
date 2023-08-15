@@ -46,6 +46,7 @@ class CreedAlly_Api_Integration_News_Widget extends WP_Widget {
 		$widget_desc          = ( ! empty( $instance['description'] ) ) ? $instance['description'] : '';
 		$news_items           = get_transient( "ai_newsapi_news_{$customer_id}" ); // Fetch the news data from the cache.
 		$customer_preferences = ai_get_customer_preferences(); // Get the customer preferences.
+		$per_page             = get_option( 'ai_news_per_page' ); // News per page.
 
 		// See if there are news items in the cache.
 		if ( false === $news_items || empty( $news_items ) ) {
@@ -58,10 +59,11 @@ class CreedAlly_Api_Integration_News_Widget extends WP_Widget {
 			if ( false !== $news_items ) {
 				set_transient( "ai_newsapi_news_{$customer_id}", wp_json_encode( $news_items ), ( 60 * 60 * 4 ) );
 			}
-		} else {
-			// If you're here, the data is already cached.
-			$news_items = json_decode( $news_items, true );
 		}
+
+		// Get the news items into sliced array to serve the pagination.
+		$news_items = json_decode( $news_items, true );
+		$news_items = array_slice( $news_items, 0, $per_page );
 
 		// Display the calendar widget with reservable items.
 		ob_start();
@@ -97,6 +99,10 @@ class CreedAlly_Api_Integration_News_Widget extends WP_Widget {
 							<p><?php echo wp_kses_post( ( ! empty( $news_item['description'] ) ? $news_item['description'] : '' ) ); ?></p>
 						</div>
 					<?php } ?>
+					<div class="news-widget-pagination-links">
+						<a href="#" class="prev non-clickable" title="<?php esc_html_e( 'Prev', 'api-integration' ); ?>"><?php esc_html_e( 'Prev', 'api-integration' ); ?></a>
+						<a href="#" class="next" title="<?php esc_html_e( 'Next', 'api-integration' ); ?>"><?php esc_html_e( 'Next', 'api-integration' ); ?></a>
+					</div>
 				</div>
 				<?php
 			} else {

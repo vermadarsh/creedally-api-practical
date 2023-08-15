@@ -1,1 +1,7 @@
 .non-clickable {pointer-events: none;opacity: 0.5;}
+.news-pagination .prev,
+.news-pagination .next,
+.news-widget-pagination-links .prev,
+.news-widget-pagination-links .next{outline: none;}
+.news-widget-pagination-links {text-align: center;}
+.news-widget-pagination-links .next{margin-left: 20px;}
