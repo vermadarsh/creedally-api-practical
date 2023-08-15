@@ -88,7 +88,9 @@ class CreedAlly_Api_Integration_News_Widget extends WP_Widget {
 			if ( ! empty( $news_items ) && is_array( $news_items ) ) {
 				?>
 				<div class="api-integration-news-container">
-					<?php foreach ( $news_items as $news_item ) { ?>
+					<?php foreach ( $news_items as $news_item ) {
+						$news_item = (array) $news_item;
+						?>
 						<div class="news-item">
 							<img alt="news-item-featured-image" src="<?php echo esc_url( ( ! empty( $news_item['urlToImage'] ) ? $news_item['urlToImage'] : '' ) ); ?>" />
 							<h4><a href="<?php echo esc_url( ( ! empty( $news_item['url'] ) ? $news_item['url'] : '' ) ); ?>" target="_blank" title="<?php echo wp_kses_post( ( ! empty( $news_item['title'] ) ? $news_item['title'] : '' ) ); ?>"><?php echo wp_kses_post( ( ! empty( $news_item['title'] ) ? $news_item['title'] : '' ) ); ?></a></h4>

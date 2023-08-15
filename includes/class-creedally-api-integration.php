@@ -87,10 +87,11 @@ class CreedAlly_Api_Integration {
 	private function define_public_facing_hooks() {
 		$public_class_obj = new CreedAlly_Api_Integration_Public();
 
-		add_action( 'wp_enqueue_scripts', array( $public_class_obj, 'ai_wp_enqueue_scripts_callback' ) );
-		add_filter( 'woocommerce_account_menu_items', array( $public_class_obj, 'ai_woocommerce_account_menu_items_callback' ) );
-		add_action( 'init', array( $public_class_obj, 'ai_init_callback' ) );
-		add_action( 'woocommerce_account_news_endpoint', array( $public_class_obj, 'ai_woocommerce_account_news_endpoint_callback' ) );
-		add_action( 'api_integration_save_customer_news_preferences', array( $public_class_obj, 'ai_api_integration_save_customer_news_preferences_callback' ) );
+		add_action( 'wp_enqueue_scripts', array( $public_class_obj, 'cai_wp_enqueue_scripts_callback' ) );
+		add_filter( 'woocommerce_account_menu_items', array( $public_class_obj, 'cai_woocommerce_account_menu_items_callback' ) );
+		add_action( 'init', array( $public_class_obj, 'cai_init_callback' ) );
+		add_action( 'woocommerce_account_news_endpoint', array( $public_class_obj, 'cai_woocommerce_account_news_endpoint_callback' ) );
+		add_action( 'api_integration_save_customer_news_preferences', array( $public_class_obj, 'cai_api_integration_save_customer_news_preferences_callback' ) );
+		add_action( 'wp_ajax_paginate_news', array( $public_class_obj, 'cai_paginate_news_callback' ) );
 	}
 }

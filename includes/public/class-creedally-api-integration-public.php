@@ -25,7 +25,7 @@ class CreedAlly_Api_Integration_Public {
 	/**
 	 * Enqueue scripts on the public end.
 	 */
-	public function ai_wp_enqueue_scripts_callback() {
+	public function cai_wp_enqueue_scripts_callback() {
 		// Custom public style.
 		wp_register_style(
 			'api-integration-jquery-ui-style',
@@ -54,9 +54,10 @@ class CreedAlly_Api_Integration_Public {
 		// Localize public script.
 		wp_localize_script(
 			'api-integration-public-script',
-			'AI_Public_JS_Obj',
+			'CAI_Public_JS_Obj',
 			array(
-				'ajaxurl' => admin_url( 'admin-ajax.php' ),
+				'ajaxurl'   => admin_url( 'admin-ajax.php' ),
+				'ajaxnonce' => wp_create_nonce( 'cai-ajax-nonce' ),
 			)
 		);
 	}
@@ -68,7 +69,7 @@ class CreedAlly_Api_Integration_Public {
 	 * @return array
 	 * @since 1.0.0
 	 */
-	public function ai_woocommerce_account_menu_items_callback( $endpoints ) {
+	public function cai_woocommerce_account_menu_items_callback( $endpoints ) {
 		// Return, if the custom endpoint already exists.
 		if ( array_key_exists( 'news', $endpoints ) ) {
 			return $endpoints;
@@ -96,7 +97,7 @@ class CreedAlly_Api_Integration_Public {
 	 *
 	 * @since 1.0.0
 	 */
-	public function ai_init_callback() {
+	public function cai_init_callback() {
 		add_rewrite_endpoint( 'news', EP_ROOT | EP_PAGES ); // Rewrite the custom endpoint, news.
 
 		// Flush the rewrite rules foor news endpoints.
@@ -121,7 +122,7 @@ class CreedAlly_Api_Integration_Public {
 	 *
 	 * @since 1.0.0
 	 */
-	public function ai_woocommerce_account_news_endpoint_callback() {
+	public function cai_woocommerce_account_news_endpoint_callback() {
 		// Include the news listing template.
 		cai_get_template( 'myaccount/news.php' );
 	}
@@ -131,7 +132,7 @@ class CreedAlly_Api_Integration_Public {
 	 *
 	 * @since 1.0.0
 	 */
-	private function ai_save_customer_news_preferences() {
+	private function cai_save_customer_news_preferences() {
 		$news_interest  = filter_input( INPUT_POST, 'news_interest', FILTER_SANITIZE_STRING );
 		$news_domains   = filter_input( INPUT_POST, 'news_domains', FILTER_SANITIZE_STRING );
 		$news_date_from = filter_input( INPUT_POST, 'news_date_from', FILTER_SANITIZE_STRING );
@@ -164,12 +165,87 @@ class CreedAlly_Api_Integration_Public {
 	 * @param int $customer_id Customer ID.
 	 * @since 1.0.0
 	 */
-	public function ai_api_integration_save_customer_news_preferences_callback( $customer_id = 0 ) {
+	public function cai_api_integration_save_customer_news_preferences_callback( $customer_id = 0 ) {
 		// Return, if the customer ID is invalid.
 		if ( 0 === $customer_id ) {
 			return;
 		}
 
 		delete_transient( "ai_newsapi_news_{$customer_id}" );
+	}
+
+	/**
+	 * Ajax callback to scan the site.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public static function cai_paginate_news_callback() {
+		// Check for nonce security.
+		$nonce = filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING );
+
+		// Check, if the nonce is verified.
+		if ( ! wp_verify_nonce( $nonce, 'cai-ajax-nonce' ) ) {
+			wp_send_json_error(
+				array(
+					'code'          => 'ajax-failed',
+					'error_message' => __( 'AJAX could not be processed as nonce couldn\'t be validated. Please contact the administrator.', 'api-integration' ),
+				)
+			);
+			wp_die();
+		}
+
+		// Get the news.
+		$page        = (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_NUMBER_INT );
+		$customer_id = get_current_user_id();
+		$news_items  = get_transient( "ai_newsapi_news_{$customer_id}" ); // Fetch the news data from the cache.
+		$news_items  = ( false !== $news_items ) ? json_decode( $news_items, true ) : false;
+
+		// Check, if there are no news items.
+		if ( false === $news_items ) {
+			wp_send_json_error(
+				array(
+					'code'          => 'ajax-failed',
+					'error_message' => __( 'AJAX could not be processed as there are no news items in the memory.', 'api-integration' ),
+				)
+			);
+			wp_die();
+		}
+
+		// Get the paginated news.
+		$per_page    = get_option( 'ai_news_per_page' ); // News per page.
+		$total_pages = count( $news_items ) / $per_page;
+		$total_pages = ( is_float( $total_pages ) ) ? ( $total_pages + 1 ) : $total_pages;
+		$news_items  = array_slice( $news_items, ( ( $page - 1 ) * $per_page ), $per_page ); // Sliced news items.
+
+		// Check, if there are no news items.
+		if ( empty( $news_items ) || ! is_array( $news_items ) ) {
+			wp_send_json_error(
+				array(
+					'code'          => 'ajax-failed',
+					'error_message' => __( 'AJAX could not be processed as there are no news items in the pagination.', 'api-integration' ),
+				)
+			);
+			wp_die();
+		}
+
+		$html = '';
+
+		// Loop through the paginated news items.
+		foreach ( $news_items as $news_item ) {
+			$news_item = (array) $news_item;
+			$html     .= cai_get_news_row_html( $news_item );
+		}
+
+		// Return the ajax response.
+		wp_send_json_success(
+			array(
+				'code'        => 'paginated',
+				'html'        => $html,
+				'page'        => $page,
+				'total_pages' => $total_pages,
+			)
+		);
+		wp_die();
 	}
 }

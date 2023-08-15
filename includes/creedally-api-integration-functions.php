@@ -48,10 +48,9 @@ if ( ! function_exists( 'ai_get_news' ) ) {
 		// Get the admin configurations.
 		$api_key              = get_option( 'ai_news_api_key' ); // News API key.
 		$api_endpoint         = get_option( 'ai_news_api_endpoint' ); // News API endpoint.
-		$per_page             = get_option( 'ai_news_per_page' ); // News per page.
 		$customer_preferences = ai_get_customer_preferences(); // Get the customer preferences.
 		$news_interest        = ( ! empty( $customer_preferences['news_interest'] ) ) ? $customer_preferences['news_interest'] : ''; // Customer interest.
-		$news_sources         = ( ! empty( $customer_preferences['news_sources'] ) ) ? $customer_preferences['news_sources'] : ''; // News sources.
+		$news_domains         = ( ! empty( $customer_preferences['news_domains'] ) ) ? $customer_preferences['news_domains'] : ''; // News domains.
 		$news_date_from       = ( ! empty( $customer_preferences['news_date_from'] ) ) ? $customer_preferences['news_date_from'] : ''; // News date from.
 		$news_date_to         = ( ! empty( $customer_preferences['news_date_to'] ) ) ? $customer_preferences['news_date_to'] : ''; // News date to.
 		$server_arr           = wp_unslash( $_SERVER );
@@ -59,7 +58,7 @@ if ( ! function_exists( 'ai_get_news' ) ) {
 			'q'       => $news_interest,
 			'from'    => $news_date_from,
 			'to'      => $news_date_to,
-			'domains' => 'techcrunch.com,thenextweb.com',
+			'domains' => $news_domains,
 			'sortBy'  => 'popularity',
 			'apiKey'  => $api_key,
 		);
@@ -110,7 +109,7 @@ if ( ! function_exists( 'ai_get_news' ) ) {
 		$news_api_response_body = wp_remote_retrieve_body( $news_api_response ); // Get the response body.
 		$news_api_response_body = ( ! empty( $news_api_response_body ) ) ? json_decode( $news_api_response_body ) : array();
 
-		return ( ! empty( $news_api_response_body->articles ) ) ? array_slice( $news_api_response_body->articles, 0, $per_page ) : false;
+		return ( ! empty( $news_api_response_body->articles ) ) ? $news_api_response_body->articles : false;
 	}
 }
 
@@ -254,5 +253,36 @@ if ( ! function_exists( 'cai_locate_template' ) ) {
 
 		// Return what is found.
 		return apply_filters( 'cai_locate_template', $template, $template_name, $template_path );
+	}
+}
+
+/**
+ * Check if the function, 'cai_get_news_row_html' exists.
+ */
+if ( ! function_exists( 'cai_get_news_row_html' ) ) {
+	/**
+	 * Return the current date according to local time.
+	 *
+	 * @param string $format Holds the format string.
+	 * @return string
+	 */
+	function cai_get_news_row_html( $news_item = array() ) {
+		// Return, if the news item array is blank.
+		if ( empty( $news_item ) || ! is_array( $news_item ) ) {
+			return;
+		}
+
+		// Start preparing the HTML.
+		ob_start();
+		?>
+		<tr>
+			<td data-title="<?php esc_html_e( 'Image', 'api-integration' ); ?>"><img src="<?php echo esc_url( ( ! empty( $news_item['urlToImage'] ) ? $news_item['urlToImage'] : '' ) ); ?>" alt="news-item-featured-image" /></td>
+			<td data-title="<?php esc_html_e( 'Title', 'api-integration' ); ?>"><a href="<?php echo esc_url( ( ! empty( $news_item['url'] ) ? $news_item['url'] : '' ) ); ?>" target="_blank" title="<?php echo wp_kses_post( ( ! empty( $news_item['title'] ) ? $news_item['title'] : '' ) ); ?>"><?php echo wp_kses_post( ( ! empty( $news_item['title'] ) ? $news_item['title'] : '' ) ); ?></a></td>
+			<td data-title="<?php esc_html_e( 'Description', 'api-integration' ); ?>"><?php echo wp_kses_post( ( ! empty( $news_item['description'] ) ? $news_item['description'] : '' ) ); ?></td>
+			<td data-title="<?php esc_html_e( 'Date', 'api-integration' ); ?>"><?php echo wp_kses_post( ( ! empty( $news_item['publishedAt'] ) ? gmdate( 'Y-m-d H:i', strtotime( $news_item['publishedAt'] ) ) : '' ) ); ?></td>
+		</tr>
+		<?php
+
+		return ob_get_clean();
 	}
 }

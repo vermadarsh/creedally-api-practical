@@ -15,6 +15,7 @@ wp_enqueue_style( 'api-integration-jquery-ui-style' );
 $customer_id          = get_current_user_id();
 $news_items           = get_transient( "ai_newsapi_news_{$customer_id}" ); // Fetch the news data from the cache.
 $customer_preferences = ai_get_customer_preferences(); // Get the customer preferences.
+$per_page             = get_option( 'ai_news_per_page' ); // News per page.
 $news_interest        = ( ! empty( $customer_preferences['news_interest'] ) ) ? $customer_preferences['news_interest'] : '';
 $news_domains         = ( ! empty( $customer_preferences['news_domains'] ) ) ? $customer_preferences['news_domains'] : '';
 $news_date_from       = ( ! empty( $customer_preferences['news_date_from'] ) ) ? $customer_preferences['news_date_from'] : '';
@@ -32,14 +33,14 @@ if ( false === $news_items || empty( $news_items ) ) :
 	if ( false !== $news_items ) :
 		set_transient( "ai_newsapi_news_{$customer_id}", wp_json_encode( $news_items ), ( 60 * 60 * 4 ) );
 	endif;
-else :
-	// If you're here, the data is already cached.
-	$news_items = json_decode( $news_items, true );
 endif;
+
+// Get the news items into sliced array to serve the pagination.
+$news_items = json_decode( $news_items, true );
+$news_items = array_slice( $news_items, 0, $per_page );
 
 // If there are news.
 $has_news = ( false === $news_items || false === $customer_preferences ) ? false : $news_items;
-
 ?>
 <!-- NEWS PREFERENCES -->
 <form class="woocommerce-NewsPreferencesForm news-preferences" action="" method="post">
@@ -79,7 +80,7 @@ $has_news = ( false === $news_items || false === $customer_preferences ) ? false
 if ( $has_news ) :
 	?>
 	<h3><?php esc_html_e( 'New Items', 'api-integration' ); ?></h3>
-	<table>
+	<table class="news-listing-table">
 		<thead>
 			<tr>
 				<th class="table__header-news-image"><span class="nobr"></span></th>
@@ -92,15 +93,18 @@ if ( $has_news ) :
 			<?php
 			foreach ( $news_items as $news_item ) :
 				$news_item = (array) $news_item;
-				?>
-				<tr>
-					<td data-title="<?php esc_html_e( 'Image', 'api-integration' ); ?>"><img src="<?php echo esc_url( ( ! empty( $news_item['urlToImage'] ) ? $news_item['urlToImage'] : '' ) ); ?>" alt="news-item-featured-image" /></td>
-					<td data-title="<?php esc_html_e( 'Title', 'api-integration' ); ?>"><a href="<?php echo esc_url( ( ! empty( $news_item['url'] ) ? $news_item['url'] : '' ) ); ?>" target="_blank" title="<?php echo wp_kses_post( ( ! empty( $news_item['title'] ) ? $news_item['title'] : '' ) ); ?>"><?php echo wp_kses_post( ( ! empty( $news_item['title'] ) ? $news_item['title'] : '' ) ); ?></a></td>
-					<td data-title="<?php esc_html_e( 'Description', 'api-integration' ); ?>"><?php echo wp_kses_post( ( ! empty( $news_item['description'] ) ? $news_item['description'] : '' ) ); ?></td>
-					<td data-title="<?php esc_html_e( 'Date', 'api-integration' ); ?>"><?php echo wp_kses_post( ( ! empty( $news_item['publishedAt'] ) ? gmdate( 'Y-m-d H:i', strtotime( $news_item['publishedAt'] ) ) : '' ) ); ?></td>
-				</tr>
-			<?php endforeach; ?>
+				echo wp_kses_post( cai_get_news_row_html( $news_item ) );
+			endforeach;
+			?>
 		</tbody>
+		<tfoot>
+			<tr class="news-pagination">
+				<td><a href="#" class="prev non-clickable" title="<?php esc_html_e( 'Prev', 'api-integration' ); ?>"><?php esc_html_e( 'Prev', 'api-integration' ); ?></a></td>
+				<td><input type="hidden" id="current-news-items-page" value="1" /></td>
+				<td></td>
+				<td><a href="#" class="next" title="<?php esc_html_e( 'Next', 'api-integration' ); ?>"><?php esc_html_e( 'Next', 'api-integration' ); ?></a></td>
+			</tr>
+		</tfoot>
 	</table>
 <?php else : ?>
 
