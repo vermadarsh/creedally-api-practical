@@ -35,85 +35,6 @@ if ( ! function_exists( 'ai_get_customer_preferences' ) ) {
 }
 
 /**
- * Check if the function, 'ai_get_news' exists.
- */
-if ( ! function_exists( 'ai_get_news' ) ) {
-	/**
-	 * Get the news from the API.
-	 *
-	 * @return array|bool
-	 * @since 1.0.0
-	 */
-	function ai_get_news() {
-		// Get the admin configurations.
-		$api_key              = get_option( 'ai_news_api_key' ); // News API key.
-		$api_endpoint         = get_option( 'ai_news_api_endpoint' ); // News API endpoint.
-		$customer_preferences = ai_get_customer_preferences(); // Get the customer preferences.
-		$news_interest        = ( ! empty( $customer_preferences['news_interest'] ) ) ? $customer_preferences['news_interest'] : ''; // Customer interest.
-		$news_domains         = ( ! empty( $customer_preferences['news_domains'] ) ) ? $customer_preferences['news_domains'] : ''; // News domains.
-		$news_date_from       = ( ! empty( $customer_preferences['news_date_from'] ) ) ? $customer_preferences['news_date_from'] : ''; // News date from.
-		$news_date_to         = ( ! empty( $customer_preferences['news_date_to'] ) ) ? $customer_preferences['news_date_to'] : ''; // News date to.
-		$server_arr           = wp_unslash( $_SERVER );
-		$api_payload          = array(
-			'q'       => $news_interest,
-			'from'    => $news_date_from,
-			'to'      => $news_date_to,
-			'domains' => $news_domains,
-			'sortBy'  => 'popularity',
-			'apiKey'  => $api_key,
-		);
-
-		// Log message.
-		/* translators: 1: %d: current user id */
-		$message = sprintf( __( 'NOTICE: Fetching news for customer ID, %1$d started.', 'api-integration' ), get_current_user_id() );
-		ai_write_api_log( $message, true );
-
-		/* translators: 1: %s: new api payload */
-		$message = sprintf( __( 'NOTICE: API Payload: %1$s', 'api-integration' ), wp_json_encode( $api_payload ) );
-		ai_write_api_log( $message, true ); // Write API log.
-
-		$news_api_url      = add_query_arg( $api_payload, $api_endpoint );
-		$news_api_response = wp_remote_get( // Hit the API response.
-			$news_api_url,
-			array(
-				'headers'   => array(
-					'Content-Type' => 'application/json',
-					'User-Agent'   => $server_arr['HTTP_USER_AGENT'],
-				),
-				'sslverify' => false,
-				'timeout'   => 3600,
-			)
-		);
-
-		// Get the API response code.
-		$news_api_response_code = wp_remote_retrieve_response_code( $news_api_response ); // Get the response code.
-
-		/* translators: 1: %s: news api response code */
-		$message = sprintf( __( 'NOTICE: API Response Code: %1$d', 'api-integration' ), $news_api_response_code );
-		ai_write_api_log( $message, true ); // Write API log.
-
-		// Return false, if the response if not 200 OK.
-		if ( 200 !== $news_api_response_code ) {
-			$response_message = ( ! empty( $news_api_response['response']['message'] ) ) ? $news_api_response['response']['message'] : '';
-			/* translators: 1: %d: response code, 2: %s: response message */
-			$message = sprintf( __( 'FAILURE: The API couldn\'t proceed due to the response code received: %1$d. Response message: %2$s', 'api-integration' ), $news_api_response_code, $response_message );
-			ai_write_api_log( $message, true ); // Write API log.
-			return false;
-		}
-
-		// Log message.
-		$message = __( 'SUCCESS: News retrieved.', 'agreement-grid-service-contract' );
-		ai_write_api_log( $message, true ); // Write API log.
-
-		// Decode the response.
-		$news_api_response_body = wp_remote_retrieve_body( $news_api_response ); // Get the response body.
-		$news_api_response_body = ( ! empty( $news_api_response_body ) ) ? json_decode( $news_api_response_body ) : array();
-
-		return ( ! empty( $news_api_response_body->articles ) ) ? $news_api_response_body->articles : false;
-	}
-}
-
-/**
  * Check if the function, 'ai_write_api_log' exists.
  */
 if ( ! function_exists( 'ai_write_api_log' ) ) {
@@ -278,7 +199,7 @@ if ( ! function_exists( 'cai_get_news_row_html' ) ) {
 		<tr>
 			<td data-title="<?php esc_html_e( 'Image', 'api-integration' ); ?>"><img src="<?php echo esc_url( ( ! empty( $news_item['urlToImage'] ) ? $news_item['urlToImage'] : '' ) ); ?>" alt="news-item-featured-image" /></td>
 			<td data-title="<?php esc_html_e( 'Title', 'api-integration' ); ?>"><a href="<?php echo esc_url( ( ! empty( $news_item['url'] ) ? $news_item['url'] : '' ) ); ?>" target="_blank" title="<?php echo wp_kses_post( ( ! empty( $news_item['title'] ) ? $news_item['title'] : '' ) ); ?>"><?php echo wp_kses_post( ( ! empty( $news_item['title'] ) ? $news_item['title'] : '' ) ); ?></a></td>
-			<td data-title="<?php esc_html_e( 'Description', 'api-integration' ); ?>"><?php echo wp_kses_post( ( ! empty( $news_item['description'] ) ? $news_item['description'] : '' ) ); ?></td>
+			<td data-title="<?php esc_html_e( 'Description', 'api-integration' ); ?>"><?php echo wp_kses_post( ( ! empty( $news_item['description'] ) ? wp_trim_words( $news_item['description'], 20, '...' ) : '' ) ); ?></td>
 			<td data-title="<?php esc_html_e( 'Date', 'api-integration' ); ?>"><?php echo wp_kses_post( ( ! empty( $news_item['publishedAt'] ) ? gmdate( 'Y-m-d H:i', strtotime( $news_item['publishedAt'] ) ) : '' ) ); ?></td>
 		</tr>
 		<?php
@@ -309,7 +230,7 @@ if ( ! function_exists( 'cai_get_news_widget_section_html' ) ) {
 		<div class="news-item">
 			<img alt="news-item-featured-image" src="<?php echo esc_url( ( ! empty( $news_item['urlToImage'] ) ? $news_item['urlToImage'] : '' ) ); ?>" />
 			<h4><a href="<?php echo esc_url( ( ! empty( $news_item['url'] ) ? $news_item['url'] : '' ) ); ?>" target="_blank" title="<?php echo wp_kses_post( ( ! empty( $news_item['title'] ) ? $news_item['title'] : '' ) ); ?>"><?php echo wp_kses_post( ( ! empty( $news_item['title'] ) ? $news_item['title'] : '' ) ); ?></a></h4>
-			<p><?php echo wp_kses_post( ( ! empty( $news_item['description'] ) ? wp_trim_words( $news_item['description'], 10, '...' ) : '' ) ); ?></p>
+			<p><?php echo wp_kses_post( ( ! empty( $news_item['description'] ) ? wp_trim_words( $news_item['description'], 20, '...' ) : '' ) ); ?></p>
 		</div>
 		<?php
 

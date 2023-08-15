@@ -23,7 +23,7 @@
  */
 class CreedAlly_Api_Integration_Activator {
 	/**
-	 * Enqueue scripts for admin end.
+	 * Execute the activator function.
 	 */
 	public static function run() {
 		// Redirect to plugin settings.

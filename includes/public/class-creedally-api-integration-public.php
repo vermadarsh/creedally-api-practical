@@ -113,7 +113,7 @@ class CreedAlly_Api_Integration_Public {
 		$news_preferences_nonce  = filter_input( INPUT_POST, 'ai_customer_news_preferences_nonce', FILTER_SANITIZE_STRING );
 
 		if ( ! is_null( $news_preferences_action ) && 'save_customer_news_preferences' === $news_preferences_action && wp_verify_nonce( $news_preferences_nonce, 'customer_news_preferences' ) ) {
-			$this->ai_save_customer_news_preferences();
+			$this->cai_save_customer_news_preferences();
 		}
 	}
 

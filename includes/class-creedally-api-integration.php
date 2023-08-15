@@ -55,6 +55,9 @@ class CreedAlly_Api_Integration {
 		// This function is used to write reusable functions.
 		require_once CAI_PLUGIN_PATH . 'includes/creedally-api-integration-functions.php';
 
+		// The class responsible for defining the API functions.
+		require_once CAI_PLUGIN_PATH . 'includes/class-creedally-api-integration-news.php';
+
 		// The class responsible for defining all actions that occur in the admin area.
 		require_once CAI_PLUGIN_PATH . 'includes/admin/class-creedally-api-integration-admin.php';
 

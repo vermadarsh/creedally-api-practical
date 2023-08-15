@@ -41,29 +41,9 @@ class CreedAlly_Api_Integration_News_Widget extends WP_Widget {
 	 * @param array $instance Holds the widget settings data.
 	 */
 	public function widget( $args, $instance ) {
-		$customer_id          = get_current_user_id();
-		$widget_title         = ( ! empty( $instance['title'] ) ) ? $instance['title'] : '';
-		$widget_desc          = ( ! empty( $instance['description'] ) ) ? $instance['description'] : '';
-		$news_items           = get_transient( "ai_newsapi_news_{$customer_id}" ); // Fetch the news data from the cache.
-		$customer_preferences = ai_get_customer_preferences(); // Get the customer preferences.
-		$per_page             = get_option( 'ai_news_per_page' ); // News per page.
-
-		// See if there are news items in the cache.
-		if ( false === $news_items || empty( $news_items ) ) {
-			$news_items = ai_get_news(); // Shoot the API to get news items.
-
-			/**
-			 * Cache the response data.
-			 * This cached data will be used to display the news items.
-			 */
-			if ( false !== $news_items ) {
-				set_transient( "ai_newsapi_news_{$customer_id}", wp_json_encode( $news_items ), ( 60 * 60 * 4 ) );
-			}
-		}
-
-		// Get the news items into sliced array to serve the pagination.
-		$news_items = json_decode( $news_items, true );
-		$news_items = array_slice( $news_items, 0, $per_page );
+		$news_items   = ( class_exists( 'CreedAlly_Api_Integration_News' ) ) ? CreedAlly_Api_Integration_News::fetch_news() : array();
+		$widget_title = ( ! empty( $instance['title'] ) ) ? $instance['title'] : '';
+		$widget_desc  = ( ! empty( $instance['description'] ) ) ? $instance['description'] : '';
 
 		// Display the news listing widget.
 		?>

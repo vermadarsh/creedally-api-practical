@@ -23,7 +23,7 @@
  */
 class CreedAlly_Api_Integration_Deactivator {
 	/**
-	 * Enqueue scripts for admin end.
+	 * Execute the deactivator function.
 	 */
 	public static function run() {
 	}
