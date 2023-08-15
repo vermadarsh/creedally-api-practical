@@ -2,7 +2,7 @@
 /**
  * This file is used for templating the news listing for customers.
  *
- * @since 0.1.0
+ * @since 1.0.0
  * @package Api_Integration
  * @subpackage Api_Integration/inc/public/templates
  */

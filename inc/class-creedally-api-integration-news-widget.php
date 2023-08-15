@@ -2,7 +2,7 @@
 /**
  * The widget for showing the news items.
  *
- * @since      0.1.0
+ * @since      1.0.0
  *
  * @package    Api_Integration
  * @subpackage Api_Integration/inc/admin
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit; // Exit if accessed directly.
  *
  * Class to manage the calendar widget settings and frontend display.
  *
- * @since      0.1.0
+ * @since      1.0.0
  * @package    Api_Integration
  * @author     Adarsh Verma <adarsh.srmcem@gmail.com>
  */

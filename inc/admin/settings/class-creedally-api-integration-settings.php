@@ -3,7 +3,7 @@
  * The admin-settings of the plugin.
  *
  * @link       https://github.com/vermadarsh/
- * @since      0.1.0
+ * @since      1.0.0
  *
  * @package    Api_Integration
  * @subpackage Api_Integration/inc/admin
@@ -11,20 +11,23 @@
 
 defined( 'ABSPATH' ) || exit; // Exit if accessed directly.
 
-if ( class_exists( 'Api_Integration_Settings', false ) ) {
-	return new Api_Integration_Settings();
+/**
+ * Return, if the class already exists.
+ */
+if ( class_exists( 'CreedAlly_Api_Integration_Settings', false ) ) {
+	return new CreedAlly_Api_Integration_Settings();
 }
 
 /**
  * Settings class for keeping data sync with marketplace.
  */
-class Api_Integration_Settings extends WC_Settings_Page {
+class CreedAlly_Api_Integration_Settings extends WC_Settings_Page {
 	/**
 	 * Constructor.
 	 */
 	public function __construct() {
 		$this->id    = 'api-integration';
-		$this->label = __( 'API Integration', 'api-integration' );
+		$this->label = __( 'News API Integration', 'api-integration' );
 
 		parent::__construct();
 	}
@@ -86,7 +89,7 @@ class Api_Integration_Settings extends WC_Settings_Page {
 	public function ai_general_settings_fields() {
 
 		return apply_filters(
-			'woocommerce_api_integration_settings',
+			'woocommerce_CreedAlly_Api_Integration_Settings',
 			apply_filters(
 				'woocommerce_api_integration_general_settings',
 				array(
@@ -136,4 +139,4 @@ class Api_Integration_Settings extends WC_Settings_Page {
 	}
 }
 
-return new Api_Integration_Settings();
+return new CreedAlly_Api_Integration_Settings();

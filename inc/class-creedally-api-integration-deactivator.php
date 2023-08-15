@@ -5,10 +5,10 @@
  * A class definition that holds the code that would execute on plugin deactivation.
  *
  * @link       https://github.com/vermadarsh/
- * @since      0.1.0
+ * @since      1.0.0
  *
- * @package    Api_Integration
- * @subpackage Api_Integration/inc/admin
+ * @package    CreedAlly_Api_Integration
+ * @subpackage CreedAlly_Api_Integration/inc
  */
 
 /**
@@ -16,15 +16,15 @@
  *
  * A class definition that holds the code that would execute on plugin deactivation.
  *
- * @since      0.1.0
- * @package    Api_Integration
+ * @since      1.0.0
+ * @package    CreedAlly_Api_Integration
+ * @subpackage CreedAlly_Api_Integration/inc
  * @author     Adarsh Verma <adarsh.srmcem@gmail.com>
  */
-class Api_Integration_Deactivator {
+class CreedAlly_Api_Integration_Deactivator {
 	/**
 	 * Enqueue scripts for admin end.
 	 */
 	public static function run() {
-
 	}
 }

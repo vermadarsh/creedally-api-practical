@@ -6,11 +6,11 @@
  * Author:          Adarsh Verma
  * Author URI:      https://github.com/vermadarsh/
  * Text Domain:     api-integration
- * Version:         0.1.0
+ * Version:         1.0.0
  * License:         GPL-2.0+
  * License URI:     https://www.gnu.org/licenses/gpl-2.0.txt
  *
- * @package         Api_Integration
+ * @package         CreedAlly_Api_Integration
  */
 
 // If this file is called directly, abort.
@@ -20,54 +20,54 @@ if ( ! defined( 'WPINC' ) ) {
 
 /**
  * Currently plugin version.
- * Start at version 0.1.0 and use SemVer - https://semver.org
+ * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'AI_PLUGIN_VERSION', '0.1.0' );
+define( 'CAI_PLUGIN_VERSION', '1.0.0' );
 
 // Plugin path.
-if ( ! defined( 'AI_PLUGIN_PATH' ) ) {
-	define( 'AI_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
+if ( ! defined( 'CAI_PLUGIN_PATH' ) ) {
+	define( 'CAI_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 }
 
 // Plugin URL.
-if ( ! defined( 'AI_PLUGIN_URL' ) ) {
-	define( 'AI_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+if ( ! defined( 'CAI_PLUGIN_URL' ) ) {
+	define( 'CAI_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 }
 
 // WooCommerce logs directory path.
-if ( ! defined( 'AIWC_LOG_DIR_PATH' ) ) {
+if ( ! defined( 'CAIWC_LOG_DIR_PATH' ) ) {
 	$uploads_dir = wp_upload_dir();
-	define( 'AIWC_LOG_DIR_PATH', $uploads_dir['basedir'] . '/wc-logs/' );
+	define( 'CAIWC_LOG_DIR_PATH', $uploads_dir['basedir'] . '/wc-logs/' );
 }
 
 // WooCommerce logs directory url.
-if ( ! defined( 'AIWC_LOG_DIR_URL' ) ) {
+if ( ! defined( 'CAIWC_LOG_DIR_URL' ) ) {
 	$uploads_dir = wp_upload_dir();
-	define( 'AIWC_LOG_DIR_URL', $uploads_dir['baseurl'] . '/wc-logs/' );
+	define( 'CAIWC_LOG_DIR_URL', $uploads_dir['baseurl'] . '/wc-logs/' );
 }
 
 /**
  * This code runs during the plugin activation.
  * This code is documented in inc/class-api-integration-activator.php
  */
-function activate_api_integration() {
-	require 'inc/admin/class-api-integration-activator.php';
-	Api_Integration_Activator::run();
+function cai_activate_api_integration() {
+	require 'inc/class-creedally-api-integration-activator.php';
+	CreedAlly_Api_Integration_Activator::run();
 }
 
-register_activation_hook( __FILE__, 'activate_api_integration' );
+register_activation_hook( __FILE__, 'cai_activate_api_integration' );
 
 /**
  * This code runs during the plugin deactivation.
  * This code is documented in inc/class-api-integration-deactivator.php
  */
-function deactivate_api_integration() {
-	require 'inc/admin/class-api-integration-deactivator.php';
-	Api_Integration_Deactivator::run();
+function cai_deactivate_api_integration() {
+	require 'inc/class-creedally-api-integration-deactivator.php';
+	CreedAlly_Api_Integration_Deactivator::run();
 }
 
-register_deactivation_hook( __FILE__, 'deactivate_api_integration' );
+register_deactivation_hook( __FILE__, 'cai_deactivate_api_integration' );
 
 /**
  * Begins execution of the plugin.
@@ -76,19 +76,12 @@ register_deactivation_hook( __FILE__, 'deactivate_api_integration' );
  * then kicking off the plugin from this point in the file does
  * not affect the page life cycle.
  *
- * @since    0.1.0
+ * @since    1.0.0
  */
-function run_api_integration_plugin() {
-	// This function is used to write reusable functions.
-	require_once 'inc/api-integration-functions.php';
-
-	// The core plugin class that is used to define admin-specific hooks.
-	require_once 'inc/admin/class-api-integration-admin.php';
-	new Api_Integration_Admin();
-
-	// The core plugin class that is used to define public-specific hooks.
-	require_once 'inc/public/class-api-integration-public.php';
-	new Api_Integration_Public();
+function run_creedally_api_integration_plugin() {
+	// The core plugin class that is used to define internationalization, admin-specific hooks, and public-facing site hooks.
+	require 'inc/class-creedally-api-integration.php';
+	$plugin_class_obj = new CreedAlly_Api_Integration();
 }
 
 /**
@@ -101,10 +94,10 @@ function ai_plugins_loaded_callback() {
 
 	// If the dependant plugin isn't active, throw admin notice.
 	if ( false === $is_wc_active ) {
-		add_action( 'admin_notices', 'ai_admin_notices_callback' );
+		add_action( 'admin_notices', 'cai_admin_notices_callback' );
 	} else {
-		run_api_integration_plugin();
-		add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'ai_plugin_actions_callback' );
+		run_creedally_api_integration_plugin();
+		add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'cai_plugin_actions_callback' );
 	}
 }
 
@@ -113,15 +106,15 @@ add_action( 'plugins_loaded', 'ai_plugins_loaded_callback' );
 /**
  * This function is called to show admin notices for any required plugin not active || installed.
  */
-function ai_admin_notices_callback() {
+function cai_admin_notices_callback() {
 	$this_plugin_data = get_plugin_data( __FILE__ );
-	$this_plugin      = $this_plugin_data['Name'];
-	$wc_plugin        = 'WooCommerce';
+	$this_plugin_name = $this_plugin_data['Name'];
+	$wc_plugin_name   = 'WooCommerce';
 	?>
 	<div class="error">
 		<p>
 			<?php /* translators: 1: %s: string tag open, 2: %s: strong tag close, 3: %s: this plugin, 4: %s: woocommerce plugin */ ?>
-			<?php echo wp_kses_post( sprintf( __( '%1$s%3$s%2$s is ineffective as it requires %1$s%4$s%2$s to be installed and active.', 'api-integration' ), '<strong>', '</strong>', esc_html( $this_plugin ), esc_html( $wc_plugin ) ) ); ?>
+			<?php echo wp_kses_post( sprintf( __( '%1$s%3$s%2$s is ineffective as it requires %1$s%4$s%2$s to be installed and active.', 'api-integration' ), '<strong>', '</strong>', esc_html( $this_plugin_name ), esc_html( $wc_plugin_name ) ) ); ?>
 		</p>
 	</div>
 	<?php
@@ -132,9 +125,9 @@ function ai_admin_notices_callback() {
  *
  * @param array $links Links array.
  * @return array
- * @since 0.1.0
+ * @since 1.0.0
  */
-function ai_plugin_actions_callback( $links ) {
+function cai_plugin_actions_callback( $links ) {
 	$this_plugin_links = array(
 		'<a title="' . __( 'Settings', 'api-integration' ) . '" href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=api-integration' ) ) . '">' . __( 'Settings', 'api-integration' ) . '</a>',
 	);

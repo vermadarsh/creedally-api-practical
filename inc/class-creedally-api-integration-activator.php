@@ -5,10 +5,10 @@
  * A class definition that holds the code that would execute on plugin activation.
  *
  * @link       https://github.com/vermadarsh/
- * @since      0.1.0
+ * @since      1.0.0
  *
- * @package    Api_Integration
- * @subpackage Api_Integration/inc/admin
+ * @package    CreedAlly_Api_Integration
+ * @subpackage CreedAlly_Api_Integration/inc
  */
 
 /**
@@ -16,16 +16,17 @@
  *
  * A class definition that holds the code that would execute on plugin activation.
  *
- * @since      0.1.0
- * @package    Api_Integration
- * @author     Adarsh Verma <adarsh.srmcem@gmail.com>
+ * @since      1.0.0
+ * @package    CreedAlly_Api_Integration
+ * @subpackage CreedAlly_Api_Integration/inc
+ * @author     CreedAlly_Api_Integration Verma <adarsh.srmcem@gmail.com>
  */
-class Api_Integration_Activator {
+class CreedAlly_Api_Integration_Activator {
 	/**
 	 * Enqueue scripts for admin end.
 	 */
 	public static function run() {
 		// Redirect to plugin settings.
-		add_option( 'ai_do_activation_redirect', 1 );
+		add_option( 'cai_do_activation_redirect', 1 );
 	}
 }

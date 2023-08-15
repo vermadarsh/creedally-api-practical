@@ -2,7 +2,7 @@
 /**
  * This file is used for writing all the re-usable custom functions.
  *
- * @since   0.1.0
+ * @since   1.0.0
  * @package Api_Integration
  * @subpackage Api_Integration/inc
  */
@@ -17,7 +17,7 @@ if ( ! function_exists( 'ai_get_customer_preferences' ) ) {
 	 * Get the customer news preferences.
 	 *
 	 * @return array|bool
-	 * @since 0.1.0
+	 * @since 1.0.0
 	 */
 	function ai_get_customer_preferences() {
 		$customer_id          = get_current_user_id();
@@ -42,7 +42,7 @@ if ( ! function_exists( 'ai_get_news' ) ) {
 	 * Get the news from the API.
 	 *
 	 * @return array|bool
-	 * @since 0.1.0
+	 * @since 1.0.0
 	 */
 	function ai_get_news() {
 		// Get the admin configurations.

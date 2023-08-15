@@ -5,7 +5,7 @@
  * A class definition that holds all the hooks regarding all the custom functionalities at the public end.
  *
  * @link       https://github.com/vermadarsh/
- * @since      0.1.0
+ * @since      1.0.0
  *
  * @package    Api_Integration
  * @subpackage Api_Integration/inc/public
@@ -16,25 +16,11 @@
  *
  * A class definition that holds all the hooks regarding all the custom functionalities at the public end.
  *
- * @since      0.1.0
+ * @since      1.0.0
  * @package    Api_Integration
  * @author     Adarsh Verma <adarsh.srmcem@gmail.com>
  */
-class Api_Integration_Public {
-	/**
-	 * Define the core functionality of the plugin.
-	 *
-	 * Load all the public hooks here.
-	 *
-	 * @since    0.1.0
-	 */
-	public function __construct() {
-		add_action( 'wp_enqueue_scripts', array( $this, 'ai_wp_enqueue_scripts_callback' ) );
-		add_filter( 'woocommerce_account_menu_items', array( $this, 'ai_woocommerce_account_menu_items_callback' ) );
-		add_action( 'init', array( $this, 'ai_init_callback' ) );
-		add_action( 'woocommerce_account_news_endpoint', array( $this, 'ai_woocommerce_account_news_endpoint_callback' ) );
-		add_action( 'api_integration_save_customer_news_preferences', array( $this, 'ai_api_integration_save_customer_news_preferences_callback' ) );
-	}
+class CreedAlly_Api_Integration_Public {
 
 	/**
 	 * Enqueue scripts on the public end.
@@ -80,7 +66,7 @@ class Api_Integration_Public {
 	 *
 	 * @param array $endpoints Array of customer navigation endpoints.
 	 * @return array
-	 * @since 0.1.0
+	 * @since 1.0.0
 	 */
 	public function ai_woocommerce_account_menu_items_callback( $endpoints ) {
 		// Return, if the custom endpoint already exists.
@@ -108,7 +94,7 @@ class Api_Integration_Public {
 	/**
 	 * Rewrite the custom endpoints.
 	 *
-	 * @since 0.1.0
+	 * @since 1.0.0
 	 */
 	public function ai_init_callback() {
 		add_rewrite_endpoint( 'news', EP_ROOT | EP_PAGES ); // Rewrite the custom endpoint, news.
@@ -133,7 +119,7 @@ class Api_Integration_Public {
 	/**
 	 * Template for news list.
 	 *
-	 * @since 0.1.0
+	 * @since 1.0.0
 	 */
 	public function ai_woocommerce_account_news_endpoint_callback() {
 		// Include the news listing template.
@@ -143,7 +129,7 @@ class Api_Integration_Public {
 	/**
 	 * Save the customer news preferences.
 	 *
-	 * @since 0.1.0
+	 * @since 1.0.0
 	 */
 	private function ai_save_customer_news_preferences() {
 		$news_interest  = filter_input( INPUT_POST, 'news_interest', FILTER_SANITIZE_STRING );
@@ -167,7 +153,7 @@ class Api_Integration_Public {
 		 * This hook helps in doing additional actions after the customer news preferences are updated.
 		 *
 		 * @param int $customer_id Customer ID.
-		 * @since 0.1.0
+		 * @since 1.0.0
 		 */
 		do_action( 'api_integration_save_customer_news_preferences', $customer_id );
 	}
@@ -176,7 +162,7 @@ class Api_Integration_Public {
 	 * Delete the customer transient so that the news is fetched based on latest preferences.
 	 *
 	 * @param int $customer_id Customer ID.
-	 * @since 0.1.0
+	 * @since 1.0.0
 	 */
 	public function ai_api_integration_save_customer_news_preferences_callback( $customer_id = 0 ) {
 		// Return, if the customer ID is invalid.
