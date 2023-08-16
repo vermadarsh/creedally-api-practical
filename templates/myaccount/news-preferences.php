@@ -2,6 +2,8 @@
 /**
  * This file is used for templating the customer news preferences.
  *
+ * This template can be overridden by copying it to yourtheme/creedally-api-integration/myaccount/news-preferences.php.
+ *
  * @since 1.0.0
  * @package CreedAlly_Api_Integration
  * @subpackage CreedAlly_Api_Integration/templates/myaccount
