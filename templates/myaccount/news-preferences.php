@@ -9,7 +9,7 @@
 
 defined( 'ABSPATH' ) || exit; // Exit if accessed directly.
 
-$customer_preferences = ai_get_customer_preferences(); // Get the customer preferences.
+$customer_preferences = cai_get_customer_preferences(); // Get the customer preferences.
 $news_interest        = ( ! empty( $customer_preferences['news_interest'] ) ) ? $customer_preferences['news_interest'] : '';
 $news_domains         = ( ! empty( $customer_preferences['news_domains'] ) ) ? $customer_preferences['news_domains'] : '';
 $news_date_from       = ( ! empty( $customer_preferences['news_date_from'] ) ) ? $customer_preferences['news_date_from'] : '';

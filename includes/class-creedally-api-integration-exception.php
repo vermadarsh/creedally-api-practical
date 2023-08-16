@@ -34,7 +34,8 @@ class CreedAlly_Api_Integration_Exception extends Exception {
 	/**
 	 * Exception class constructor.
 	 *
-	 * @since    1.0.0
+	 * @param string $error_message Exception error message.
+	 * @since 1.0.0
 	 */
 	public function __construct( $error_message ) {
 		$this->error_message = $error_message;
@@ -43,10 +44,10 @@ class CreedAlly_Api_Integration_Exception extends Exception {
 	/**
 	 * Return the exception error message.
 	 *
-	 * @return string 
+	 * @return string
 	 */
 	public function errorMessage() {
-
+		/* translators: 1: %s: error message line number, 2: error message file path, 3: error message, 4: strong tag opened, 5: strong tag closed */
 		return sprintf( __( 'Error on line %1$s in %2$s: %4$s%3$s%5$s. News API could not be processed.', 'api-integration' ), $this->getLine(), $this->getFile(), $this->error_message, '<strong>', '</strong>' );
 	}
 }

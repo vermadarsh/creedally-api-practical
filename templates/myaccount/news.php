@@ -16,19 +16,18 @@ $news_items = array();
 
 // See if the news throw error.
 try {
-	if ( ! class_exists( 'CreedAlly_Api_Integration_News' ) ) {
+	if ( ! class_exists( 'CreedAlly_Api_Integration_News' ) ) :
+		/* translators: 1: %s: exception error message */
 		throw new CreedAlly_Api_Integration_Exception( sprintf( __( 'Invalid class: %1$s', 'api-integration' ), 'CreedAlly_Api_Integration_News' ) );
-	}
+	endif;
 
 	$news_items = CreedAlly_Api_Integration_News::get();
-}
-
-catch ( CreedAlly_Api_Integration_Exception $excep ) {
+} catch ( CreedAlly_Api_Integration_Exception $excep ) {
 	// Display custom message.
 	echo wp_kses_post( $excep->errorMessage() );
 }
 
-$news_preferences = ai_get_customer_preferences(); // Get the customer preferences.
+$news_preferences = cai_get_customer_preferences(); // Get the customer preferences.
 $has_news         = ( false === $news_items || false === $news_preferences ) ? false : $news_items;
 
 // Include the news preferences template.

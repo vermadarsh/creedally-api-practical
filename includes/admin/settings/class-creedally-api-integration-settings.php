@@ -76,7 +76,7 @@ class CreedAlly_Api_Integration_Settings extends WC_Settings_Page {
 	 * @return array
 	 */
 	public function get_settings( $current_section = '' ) {
-		$settings = $this->ai_general_settings_fields();
+		$settings = $this->cai_general_settings_fields();
 
 		return apply_filters( 'woocommerce_get_settings_' . $this->id, $settings, $current_section );
 	}
@@ -86,12 +86,12 @@ class CreedAlly_Api_Integration_Settings extends WC_Settings_Page {
 	 *
 	 * @return array
 	 */
-	public function ai_general_settings_fields() {
+	public function cai_general_settings_fields() {
 
 		return apply_filters(
-			'woocommerce_CreedAlly_Api_Integration_Settings',
+			'creedally_api_integration_settings',
 			apply_filters(
-				'woocommerce_api_integration_general_settings',
+				'creedally_api_integration_general_settings',
 				array(
 					array(
 						'title' => __( 'General Settings', 'api-integration' ),

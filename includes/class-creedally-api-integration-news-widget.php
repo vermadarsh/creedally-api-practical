@@ -39,6 +39,8 @@ class CreedAlly_Api_Integration_News_Widget extends WP_Widget {
 	 *
 	 * @param array $args Holds the widget arguments.
 	 * @param array $instance Holds the widget settings data.
+	 *
+	 * @throws CreedAlly_Api_Integration_Exception If the concerned class doesn't exist.
 	 */
 	public function widget( $args, $instance ) {
 		$news_items = array();
@@ -46,13 +48,12 @@ class CreedAlly_Api_Integration_News_Widget extends WP_Widget {
 		// See if the news throw error.
 		try {
 			if ( ! class_exists( 'CreedAlly_Api_Integration_News' ) ) {
+				/* translators: 1: %s: exception error message */
 				throw new CreedAlly_Api_Integration_Exception( sprintf( __( 'Invalid class: %1$s', 'api-integration' ), 'CreedAlly_Api_Integration_News' ) );
 			}
 
 			$news_items = CreedAlly_Api_Integration_News::get();
-		}
-
-		catch ( CreedAlly_Api_Integration_Exception $excep ) {
+		} catch ( CreedAlly_Api_Integration_Exception $excep ) {
 			// Display custom message.
 			echo wp_kses_post( $excep->errorMessage() );
 		}
@@ -84,10 +85,12 @@ class CreedAlly_Api_Integration_News_Widget extends WP_Widget {
 			if ( ! empty( $news_items ) && is_array( $news_items ) ) {
 				?>
 				<div class="api-integration-news-container widget-container">
-					<?php foreach ( $news_items as $news_item ) {
+					<?php
+					foreach ( $news_items as $news_item ) {
 						$news_item = (array) $news_item;
 						echo wp_kses_post( cai_get_news_widget_section_html( $news_item ) );
-						} ?>
+					}
+					?>
 				</div>
 				<div class="api-integration-news-pagination">
 					<div class="news-pagination">

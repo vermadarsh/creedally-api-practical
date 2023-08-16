@@ -56,7 +56,7 @@ class CreedAlly_Api_Integration {
 		require_once CAI_PLUGIN_PATH . 'includes/creedally-api-integration-functions.php';
 
 		// This function is used to drefine custom exception handler.
-		require_once CAI_PLUGIN_PATH . 'includes/creedally-api-integration-exception.php';
+		require_once CAI_PLUGIN_PATH . 'includes/class-creedally-api-integration-exception.php';
 
 		// The class responsible for defining the API functions.
 		require_once CAI_PLUGIN_PATH . 'includes/class-creedally-api-integration-news.php';

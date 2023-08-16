@@ -56,7 +56,7 @@ class CreedAlly_Api_Integration_News {
 	/**
 	 * Slice the news items array.
 	 *
-	 * @param array $news_items News items array
+	 * @param array $news_items News items array.
 	 * @return array
 	 * @since 1.0.0
 	 */
@@ -75,7 +75,7 @@ class CreedAlly_Api_Integration_News {
 		// Get the admin configurations.
 		$api_key              = get_option( 'ai_news_api_key' ); // News API key.
 		$api_endpoint         = get_option( 'ai_news_api_endpoint' ); // News API endpoint.
-		$customer_preferences = ai_get_customer_preferences(); // Get the customer preferences.
+		$customer_preferences = cai_get_customer_preferences(); // Get the customer preferences.
 		$news_interest        = ( ! empty( $customer_preferences['news_interest'] ) ) ? $customer_preferences['news_interest'] : ''; // Customer interest.
 		$news_domains         = ( ! empty( $customer_preferences['news_domains'] ) ) ? $customer_preferences['news_domains'] : ''; // News domains.
 		$news_date_from       = ( ! empty( $customer_preferences['news_date_from'] ) ) ? $customer_preferences['news_date_from'] : ''; // News date from.
@@ -93,11 +93,11 @@ class CreedAlly_Api_Integration_News {
 		// Log message.
 		/* translators: 1: %d: current user id */
 		$message = sprintf( __( 'NOTICE: Fetching news for customer ID, %1$d started.', 'api-integration' ), get_current_user_id() );
-		ai_write_api_log( $message, true );
+		cai_write_api_log( $message, true );
 
 		/* translators: 1: %s: new api payload */
 		$message = sprintf( __( 'NOTICE: API Payload: %1$s', 'api-integration' ), wp_json_encode( $api_payload ) );
-		ai_write_api_log( $message, true ); // Write API log.
+		cai_write_api_log( $message, true ); // Write API log.
 
 		// See if the news throw error.
 		try {
@@ -113,9 +113,7 @@ class CreedAlly_Api_Integration_News {
 					'timeout'   => 3600,
 				)
 			);
-		}
-
-		catch ( CreedAlly_Api_Integration_Exception $excep ) {
+		} catch ( CreedAlly_Api_Integration_Exception $excep ) {
 			// Display custom message.
 			echo wp_kses_post( $excep->errorMessage() );
 		}
@@ -125,20 +123,20 @@ class CreedAlly_Api_Integration_News {
 
 		/* translators: 1: %s: news api response code */
 		$message = sprintf( __( 'NOTICE: API Response Code: %1$d', 'api-integration' ), $news_api_response_code );
-		ai_write_api_log( $message, true ); // Write API log.
+		cai_write_api_log( $message, true ); // Write API log.
 
 		// Return false, if the response if not 200 OK.
 		if ( 200 !== $news_api_response_code ) :
 			$response_message = ( ! empty( $news_api_response['response']['message'] ) ) ? $news_api_response['response']['message'] : '';
 			/* translators: 1: %d: response code, 2: %s: response message */
 			$message = sprintf( __( 'FAILURE: The API couldn\'t proceed due to the response code received: %1$d. Response message: %2$s', 'api-integration' ), $news_api_response_code, $response_message );
-			ai_write_api_log( $message, true ); // Write API log.
+			cai_write_api_log( $message, true ); // Write API log.
 			return false;
 		endif;
 
 		// Log message.
 		$message = __( 'SUCCESS: News retrieved.', 'agreement-grid-service-contract' );
-		ai_write_api_log( $message, true ); // Write API log.
+		cai_write_api_log( $message, true ); // Write API log.
 
 		// Decode the response.
 		$news_api_response_body = wp_remote_retrieve_body( $news_api_response ); // Get the response body.

@@ -10,16 +10,16 @@
 defined( 'ABSPATH' ) || exit; // Exit if accessed directly.
 
 /**
- * Check if the function, 'ai_get_customer_preferences' exists.
+ * Check if the function, 'cai_get_customer_preferences' exists.
  */
-if ( ! function_exists( 'ai_get_customer_preferences' ) ) {
+if ( ! function_exists( 'cai_get_customer_preferences' ) ) {
 	/**
 	 * Get the customer news preferences.
 	 *
 	 * @return array|bool
 	 * @since 1.0.0
 	 */
-	function ai_get_customer_preferences() {
+	function cai_get_customer_preferences() {
 		$customer_id          = get_current_user_id();
 		$customer_preferences = array_filter(
 			array(
@@ -35,9 +35,9 @@ if ( ! function_exists( 'ai_get_customer_preferences' ) ) {
 }
 
 /**
- * Check if the function, 'ai_write_api_log' exists.
+ * Check if the function, 'cai_write_api_log' exists.
  */
-if ( ! function_exists( 'ai_write_api_log' ) ) {
+if ( ! function_exists( 'cai_write_api_log' ) ) {
 	/**
 	 * Write log to the log file.
 	 *
@@ -45,7 +45,7 @@ if ( ! function_exists( 'ai_write_api_log' ) ) {
 	 * @param boolean $include_date_time Include date time in the message.
 	 * @return void
 	 */
-	function ai_write_api_log( $message = '', $include_date_time = false ) {
+	function cai_write_api_log( $message = '', $include_date_time = false ) {
 		global $wp_filesystem;
 
 		// Return, if the message is empty.
@@ -67,7 +67,7 @@ if ( ! function_exists( 'ai_write_api_log' ) ) {
 
 		// Fetch the old content.
 		$content  = $wp_filesystem->get_contents( $log_file );
-		$content .= ( $include_date_time ) ? "\n" . ai_get_current_datetime( 'Y-m-d H:i:s' ) . ' :: ' . $message : "\n" . $message;
+		$content .= ( $include_date_time ) ? "\n" . cai_get_current_datetime( 'Y-m-d H:i:s' ) . ' :: ' . $message : "\n" . $message;
 
 		// Put the updated content.
 		$wp_filesystem->put_contents(
@@ -79,16 +79,16 @@ if ( ! function_exists( 'ai_write_api_log' ) ) {
 }
 
 /**
- * Check if the function, 'ai_get_current_datetime' exists.
+ * Check if the function, 'cai_get_current_datetime' exists.
  */
-if ( ! function_exists( 'ai_get_current_datetime' ) ) {
+if ( ! function_exists( 'cai_get_current_datetime' ) ) {
 	/**
 	 * Return the current date according to local time.
 	 *
 	 * @param string $format Holds the format string.
 	 * @return string
 	 */
-	function ai_get_current_datetime( $format = 'Y-m-d' ) {
+	function cai_get_current_datetime( $format = 'Y-m-d' ) {
 		$timezone_format = _x( $format, 'timezone date format' ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText -- Format is a dynamic value.
 
 		return date_i18n( $timezone_format );
@@ -100,17 +100,11 @@ if ( ! function_exists( 'ai_get_current_datetime' ) ) {
  */
 if ( ! function_exists( 'cai_get_template' ) ) {
 	/**
-	 * Get other templates (e.g. product attributes) passing attributes and including the file.
+	 * Get other templates (e.g. news listing) including the file.
 	 *
 	 * @param string $template_name Template name.
 	 * @param string $template_path Template path. (default: '').
 	 * @param string $default_path  Default path. (default: '').
-	 */
-	/**
-	 * Return the current date according to local time.
-	 *
-	 * @param string $format Holds the format string.
-	 * @return string
 	 */
 	function cai_get_template( $template_name, $template_path = '', $default_path = '' ) {
 		$template = cai_locate_template( $template_name, $template_path, $default_path );

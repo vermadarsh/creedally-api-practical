@@ -88,7 +88,7 @@ function run_creedally_api_integration_plugin() {
  * This initiates the plugin.
  * Checks for the required plugins to be installed and active.
  */
-function ai_plugins_loaded_callback() {
+function cai_plugins_loaded_callback() {
 	$active_plugins = get_option( 'active_plugins' ); // Active plugins.
 	$is_wc_active   = in_array( 'woocommerce/woocommerce.php', $active_plugins, true );
 
@@ -101,7 +101,7 @@ function ai_plugins_loaded_callback() {
 	}
 }
 
-add_action( 'plugins_loaded', 'ai_plugins_loaded_callback' );
+add_action( 'plugins_loaded', 'cai_plugins_loaded_callback' );
 
 /**
  * This function is called to show admin notices for any required plugin not active || installed.
