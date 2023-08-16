@@ -41,7 +41,22 @@ class CreedAlly_Api_Integration_News_Widget extends WP_Widget {
 	 * @param array $instance Holds the widget settings data.
 	 */
 	public function widget( $args, $instance ) {
-		$news_items   = ( class_exists( 'CreedAlly_Api_Integration_News' ) ) ? CreedAlly_Api_Integration_News::fetch_news() : array();
+		$news_items = array();
+
+		// See if the news throw error.
+		try {
+			if ( ! class_exists( 'CreedAlly_Api_Integration_News' ) ) {
+				throw new CreedAlly_Api_Integration_Exception( sprintf( __( 'Invalid class: %1$s', 'api-integration' ), 'CreedAlly_Api_Integration_News' ) );
+			}
+
+			$news_items = CreedAlly_Api_Integration_News::get();
+		}
+
+		catch ( CreedAlly_Api_Integration_Exception $excep ) {
+			// Display custom message.
+			echo wp_kses_post( $excep->errorMessage() );
+		}
+
 		$widget_title = ( ! empty( $instance['title'] ) ) ? $instance['title'] : '';
 		$widget_desc  = ( ! empty( $instance['description'] ) ) ? $instance['description'] : '';
 

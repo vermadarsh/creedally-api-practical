@@ -27,17 +27,17 @@ class CreedAlly_Api_Integration_News {
 	/**
 	 * Fetch the news.
 	 */
-	public static function fetch_news() {
+	public static function get() {
 		$customer_id = get_current_user_id(); // Current customer ID.
 		$news_items  = get_transient( "ai_newsapi_news_{$customer_id}" ); // Fetch the news data from the cache.
 
 		// If there news items in the cache.
 		if ( false !== $news_items ) :
-			return self::get_sliced_data( $news_items );
+			return self::slice_data( $news_items );
 		endif;
 
 		// Access the API.
-		$news_items = self::fetch_news_from_api(); // Shoot the API to get news items.
+		$news_items = self::api(); // Shoot the API to get news items.
 
 		/**
 		 * Cache the response data.
@@ -48,7 +48,7 @@ class CreedAlly_Api_Integration_News {
 		endif;
 
 		// Get the news items into sliced array to serve the pagination.
-		$news_items = self::get_sliced_data( $news_items );
+		$news_items = self::slice_data( $news_items );
 
 		return $news_items;
 	}
@@ -60,7 +60,7 @@ class CreedAlly_Api_Integration_News {
 	 * @return array
 	 * @since 1.0.0
 	 */
-	private static function get_sliced_data( $news_items ) {
+	private static function slice_data( $news_items ) {
 		$per_page   = get_option( 'ai_news_per_page' ); // News per page.
 		$news_items = json_decode( $news_items, true );
 		$news_items = ( ! empty( $news_items ) && is_array( $news_items ) ) ? array_slice( $news_items, 0, $per_page ) : array();
@@ -71,7 +71,7 @@ class CreedAlly_Api_Integration_News {
 	/**
 	 * Access the API fetching the news.
 	 */
-	private static function fetch_news_from_api() {
+	private static function api() {
 		// Get the admin configurations.
 		$api_key              = get_option( 'ai_news_api_key' ); // News API key.
 		$api_endpoint         = get_option( 'ai_news_api_endpoint' ); // News API endpoint.

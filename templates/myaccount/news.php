@@ -12,7 +12,22 @@ defined( 'ABSPATH' ) || exit; // Exit if accessed directly.
 // Enqueue the required assets.
 wp_enqueue_style( 'api-integration-jquery-ui-style' );
 
-$news_items       = ( class_exists( 'CreedAlly_Api_Integration_News' ) ) ? CreedAlly_Api_Integration_News::fetch_news() : array();
+$news_items = array();
+
+// See if the news throw error.
+try {
+	if ( ! class_exists( 'CreedAlly_Api_Integration_News' ) ) {
+		throw new CreedAlly_Api_Integration_Exception( sprintf( __( 'Invalid class: %1$s', 'api-integration' ), 'CreedAlly_Api_Integration_News' ) );
+	}
+
+	$news_items = CreedAlly_Api_Integration_News::get();
+}
+
+catch ( CreedAlly_Api_Integration_Exception $excep ) {
+	// Display custom message.
+	echo wp_kses_post( $excep->errorMessage() );
+}
+
 $news_preferences = ai_get_customer_preferences(); // Get the customer preferences.
 $has_news         = ( false === $news_items || false === $news_preferences ) ? false : $news_items;
 
