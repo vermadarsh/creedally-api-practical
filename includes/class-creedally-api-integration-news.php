@@ -99,18 +99,26 @@ class CreedAlly_Api_Integration_News {
 		$message = sprintf( __( 'NOTICE: API Payload: %1$s', 'api-integration' ), wp_json_encode( $api_payload ) );
 		ai_write_api_log( $message, true ); // Write API log.
 
-		$news_api_url      = add_query_arg( $api_payload, $api_endpoint );
-		$news_api_response = wp_remote_get( // Hit the API response.
-			$news_api_url,
-			array(
-				'headers'   => array(
-					'Content-Type' => 'application/json',
-					'User-Agent'   => $server_arr['HTTP_USER_AGENT'],
-				),
-				'sslverify' => false,
-				'timeout'   => 3600,
-			)
-		);
+		// See if the news throw error.
+		try {
+			$news_api_url      = add_query_arg( $api_payload, $api_endpoint );
+			$news_api_response = wp_remote_get( // Hit the API response.
+				$news_api_url,
+				array(
+					'headers'   => array(
+						'Content-Type' => 'application/json',
+						'User-Agent'   => $server_arr['HTTP_USER_AGENT'],
+					),
+					'sslverify' => false,
+					'timeout'   => 3600,
+				)
+			);
+		}
+
+		catch ( CreedAlly_Api_Integration_Exception $excep ) {
+			// Display custom message.
+			echo wp_kses_post( $excep->errorMessage() );
+		}
 
 		// Get the API response code.
 		$news_api_response_code = wp_remote_retrieve_response_code( $news_api_response ); // Get the response code.
