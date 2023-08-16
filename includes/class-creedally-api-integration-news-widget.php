@@ -43,7 +43,8 @@ class CreedAlly_Api_Integration_News_Widget extends WP_Widget {
 	 * @throws CreedAlly_Api_Integration_Exception If the concerned class doesn't exist.
 	 */
 	public function widget( $args, $instance ) {
-		$news_items = array();
+		$news_items       = array();
+		$news_preferences = cai_get_customer_preferences(); // Get the customer preferences.
 
 		// See if the news throw error.
 		try {
@@ -52,7 +53,9 @@ class CreedAlly_Api_Integration_News_Widget extends WP_Widget {
 				throw new CreedAlly_Api_Integration_Exception( sprintf( __( 'Invalid class: %1$s', 'api-integration' ), 'CreedAlly_Api_Integration_News' ) );
 			}
 
-			$news_items = CreedAlly_Api_Integration_News::get();
+			if ( ! empty( $news_preferences ) ) {
+				$news_items = CreedAlly_Api_Integration_News::get();
+			}
 		} catch ( CreedAlly_Api_Integration_Exception $excep ) {
 			// Display custom message.
 			echo wp_kses_post( $excep->errorMessage() );
