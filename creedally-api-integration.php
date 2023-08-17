@@ -134,20 +134,3 @@ function cai_plugin_actions_callback( $links ) {
 
 	return array_merge( $this_plugin_links, $links );
 }
-
-/**
- * Debugger function which shall be removed in production.
- */
-if ( ! function_exists( 'debug' ) ) {
-	/**
-	 * Debug function definition.
-	 *
-	 * @since    1.0.0
-	 * @param string $params it holds the parameters of debug code.
-	 */
-	function debug( $params ) {
-		echo '<pre>';
-		print_r( $params ); // phpcs:ignore
-		echo '</pre>';
-	}
-}
