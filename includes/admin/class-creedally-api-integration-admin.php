@@ -7,8 +7,8 @@
  * @link       https://github.com/vermadarsh/
  * @since      1.0.0
  *
- * @package    Api_Integration
- * @subpackage Api_Integration/includes/admin
+ * @package    CreedAlly_Api_Integration
+ * @subpackage CreedAlly_Api_Integration/includes/admin
  */
 
 /**

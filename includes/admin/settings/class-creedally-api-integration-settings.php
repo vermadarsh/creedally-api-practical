@@ -5,8 +5,8 @@
  * @link       https://github.com/vermadarsh/
  * @since      1.0.0
  *
- * @package    Api_Integration
- * @subpackage Api_Integration/inc/admin
+ * @package    CreedAlly_Api_Integration
+ * @subpackage CreedAlly_Api_Integration/includes/admin/settings
  */
 
 defined( 'ABSPATH' ) || exit; // Exit if accessed directly.
